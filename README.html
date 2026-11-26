@@ -352,20 +352,20 @@ display: none;
 </div>
 
 
-<p>Code for:</p>
-<blockquote>
-<p>Sariman, S. B., Rudi-Polloshka, J., Just, D. R., and Caputo, V. 2026.
-<em>Food additives in the U.S. food supply: Regulatory divergence,
-market concentration, and exposure patterns.</em> Proceedings of the
-National Academy of Sciences.</p>
-</blockquote>
+<div id="replication-code" class="section level1">
+<h1>Replication Code</h1>
+<p>This repository contains the replication code for: &gt; Sariman, S.
+B., Rudi-Polloshka, J., Just, D. R., and Caputo, V. 2026. <em>Food
+additives in the US food supply: Regulatory divergence, market
+concentration, and exposure patterns.</em> Proceedings of the National
+Academy of Sciences.</p>
 <hr />
 <div id="repository-structure" class="section level2">
 <h2>Repository structure</h2>
 <pre><code>main_analysis/                        Data construction and main-text tables (Tables 1-4)
 SI_analysis/
     S5-S7/                            SI Tables S5-S7 
-    S8/                               SI Table 
+    S8/                               SI Table S8
     S12-S14/                          SI Tables S12-S14 
     S15/                              SI Table S15 
     S16-S17/                          SI Tables S16-S17 
@@ -400,11 +400,8 @@ reported herein.</p>
 <h2>Software</h2>
 <ul>
 <li><strong>Stata</strong> 17 or later</li>
-<li><strong>Python 3</strong> with <code>pandas</code>,
-<code>duckdb</code>, <code>rapidfuzz</code>, <code>pyreadstat</code>,
-and <code>openpyxl</code></li>
+<li><strong>Python 3</strong></li>
 </ul>
-<pre><code>pip install pandas duckdb rapidfuzz pyreadstat openpyxl</code></pre>
 <hr />
 </div>
 <div id="run-order" class="section level2">
@@ -416,19 +413,15 @@ previous one.</p>
 (<code>main_analysis/</code>)</h3>
 <table>
 <colgroup>
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th>Step</th>
 <th>Script</th>
 <th>What it does</th>
-<th></th>
-<th></th>
 </tr>
 </thead>
 <tbody>
@@ -438,16 +431,12 @@ previous one.</p>
 <td>Cleans UPCs and removes duplicate records. Among duplicates, keeps
 records with a food category and an ingredient list, then the most
 recently modified record. Keeps U.S. products.</td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td>2</td>
 <td><code>categorydefinition_2.do</code></td>
 <td>Groups the GBFPD branded food categories into 34 food categories (SI
 Appendix, Table S2) and drops products without a usable category.</td>
-<td></td>
-<td></td>
 </tr>
 <tr class="odd">
 <td>3</td>
@@ -455,8 +444,6 @@ Appendix, Table S2) and drops products without a usable category.</td>
 <td>Drops products without ingredient information, corrects ingredient
 lists with unusual separators, cleans the ingredient text, and counts
 ingredients.</td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td>4</td>
@@ -465,8 +452,6 @@ ingredients.</td>
 matching, then fuzzy matching (RapidFuzz <code>partial_ratio</code>,
 threshold 90). The list of matched spellings was used to build the
 search terms in step 5.</td>
-<td></td>
-<td></td>
 </tr>
 <tr class="odd">
 <td>5</td>
@@ -475,16 +460,12 @@ search terms in step 5.</td>
 abbreviations, E-numbers, and exclusion rules. Creates
 <code>&lt;additive&gt;_flag</code> (1 = present) and
 <code>&lt;additive&gt;_match</code> (the term that matched).</td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td>6</td>
 <td><code>caseidentification_6.do</code></td>
 <td>Creates an indicator for each regulatory group and for any targeted
 additive.</td>
-<td></td>
-<td></td>
 </tr>
 <tr class="odd">
 <td>7</td>
@@ -492,16 +473,12 @@ additive.</td>
 <td>Share of products in each regulatory group and containing each
 additive, by food category (used for the figures on additive
 prevalence).</td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td>8</td>
 <td><code>renamingvariables_8.do</code></td>
 <td>Renames the regulatory group variables, counts targeted additives in
 each group, and labels all variables.</td>
-<td></td>
-<td></td>
 </tr>
 </tbody>
 </table>
@@ -511,19 +488,15 @@ each group, and labels all variables.</td>
 (<code>main_analysis/</code>)</h3>
 <table>
 <colgroup>
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th>Step</th>
 <th>Script</th>
 <th>What it does</th>
-<th></th>
-<th></th>
 </tr>
 </thead>
 <tbody>
@@ -535,15 +508,11 @@ UPC (exact match, then check-digit match; private-label UPCs through the
 NielsenIQ crosswalks). Keeps purchases of matched products, adds trip,
 household, and USDA information, and writes one file per food group (9
 groups).</td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td>10</td>
 <td><code>import_categories_10.do</code></td>
 <td>Imports the 9 food-group files into Stata.</td>
-<td></td>
-<td></td>
 </tr>
 <tr class="odd">
 <td>11</td>
@@ -552,8 +521,6 @@ groups).</td>
 missing package sizes, converts package size to ounces, computes price
 per ounce, and builds household variables, sampling weights, and
 purchase month.</td>
-<td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td>12</td>
@@ -561,8 +528,6 @@ purchase month.</td>
 <td>Table 1 (purchase-based exposure), Table 2 (mean price per ounce),
 Table 3 (OLS of log price per ounce), Table 4 (household monthly
 expenditure, Poisson QMLE), and SI Tables S9-S10.</td>
-<td></td>
-<td></td>
 </tr>
 </tbody>
 </table>
@@ -573,17 +538,15 @@ expenditure, Poisson QMLE), and SI Tables S9-S10.</td>
 folder, run the scripts in the order listed.</p>
 <table>
 <colgroup>
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th>Folder</th>
 <th>Script(s), in order</th>
 <th>What it does</th>
-<th></th>
 </tr>
 </thead>
 <tbody>
@@ -593,14 +556,12 @@ folder, run the scripts in the order listed.</p>
 <td>Number of products containing each additive (S5), distribution of
 products by number of targeted additives (S6), and mean ingredient count
 (S7), by food category. Uses <code>brandedfood_6.dta</code>.</td>
-<td></td>
 </tr>
 <tr class="even">
 <td><code>S8/</code></td>
 <td><code>match_rate_table_SI8.py</code></td>
 <td>Match rates between the GBFPD and NielsenIQ by food category (SI
 Table S8).</td>
-<td></td>
 </tr>
 <tr class="odd">
 <td><code>S12-S14/</code></td>
@@ -610,14 +571,12 @@ Table S8).</td>
 ingredient list, then repeats the exposure, price, and expenditure
 analyses counting only additives among the first 3, 5, and 10
 ingredients.</td>
-<td></td>
 </tr>
 <tr class="even">
 <td><code>S15/</code></td>
 <td><code>Table_S15.do</code></td>
 <td>Computes calories per package and price per calorie, and compares
 price regressions per calorie and per ounce.</td>
-<td></td>
 </tr>
 <tr class="odd">
 <td><code>S16-S17/</code></td>
@@ -625,7 +584,6 @@ price regressions per calorie and per ounce.</td>
 <td>Prices and price regressions under the dominant-count classification
 (each product assigned to the group with the most targeted
 additives).</td>
-<td></td>
 </tr>
 <tr class="even">
 <td><code>S18-S20/</code></td>
@@ -636,14 +594,12 @@ additives).</td>
 riboflavin, folic acid, niacin, corn syrup, lecithin, sodium carbonate,
 thiamine, pyridoxine hydrochloride, canola oil) and compares exposure,
 prices, and expenditure with the targeted additives.</td>
-<td></td>
 </tr>
 <tr class="odd">
 <td><code>S21-S23/</code></td>
 <td><code>Tables_S21_S23.do</code></td>
 <td>Repeats the main analyses for products last modified in or before
 2023 and compares them with the full sample.</td>
-<td></td>
 </tr>
 </tbody>
 </table>
@@ -656,17 +612,15 @@ The other figures contain their values in the script and can be run at
 any time. Each script saves a PNG (300 dpi) and a PDF.</p>
 <table>
 <colgroup>
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th>Script</th>
 <th>Figure</th>
 <th>What it does</th>
-<th></th>
 </tr>
 </thead>
 <tbody>
@@ -675,14 +629,12 @@ any time. Each script saves a PNG (300 dpi) and a PDF.</p>
 <td>Figure 1</td>
 <td>Regulatory status of the 34 targeted additives in the EU, the U.S.,
 and California.</td>
-<td></td>
 </tr>
 <tr class="even">
 <td><code>figure_2.py</code></td>
 <td>Figure 2</td>
 <td>Number of products containing each targeted additive, colored by
 regulatory group.</td>
-<td></td>
 </tr>
 <tr class="odd">
 <td><code>figure_3.py</code></td>
@@ -690,28 +642,24 @@ regulatory group.</td>
 <td>(A) Number of ingredients, all products vs. products with targeted
 additives; (B) share of products by number of targeted additives, by
 food category.</td>
-<td></td>
 </tr>
 <tr class="even">
 <td><code>figure_4.py</code></td>
 <td>Figure 4</td>
 <td>Heatmap of the share of products containing each targeted additive,
 by food category.</td>
-<td></td>
 </tr>
 <tr class="odd">
 <td><code>figure_s2.py</code></td>
 <td>SI Figure S2</td>
 <td>Number of products containing each of the 10 benchmark ingredients
 and additives.</td>
-<td></td>
 </tr>
 <tr class="even">
 <td><code>figure_s3.py</code></td>
 <td>SI Figure S3</td>
 <td>(A) Map of state bills on food additives (passed and pending); (B)
 number of state bills that include each additive.</td>
-<td></td>
 </tr>
 </tbody>
 </table>
@@ -721,6 +669,7 @@ number of state bills that include each additive.</td>
 <div id="contact" class="section level2">
 <h2>Contact</h2>
 <p>Sevval Buse Sariman, Michigan State University (<a href="mailto:sarimans@msu.edu" class="email">sarimans@msu.edu</a>)</p>
+</div>
 </div>
 
 

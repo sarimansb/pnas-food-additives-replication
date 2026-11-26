@@ -1,6 +1,7 @@
-Code for:
+# Replication Code
 
-> Sariman, S. B., Rudi-Polloshka, J., Just, D. R., and Caputo, V. 2026. *Food additives in the U.S. food supply: Regulatory divergence, market concentration, and exposure patterns.* Proceedings of the National Academy of Sciences.
+This repository contains the replication code for:
+> Sariman, S. B., Rudi-Polloshka, J., Just, D. R., and Caputo, V. 2026. *Food additives in the US food supply: Regulatory divergence, market concentration, and exposure patterns.* Proceedings of the National Academy of Sciences.
 
 ---
 
@@ -10,7 +11,7 @@ Code for:
 main_analysis/                        Data construction and main-text tables (Tables 1-4)
 SI_analysis/
     S5-S7/                            SI Tables S5-S7 
-    S8/                               SI Table 
+    S8/                               SI Table S8
     S12-S14/                          SI Tables S12-S14 
     S15/                              SI Table S15 
     S16-S17/                          SI Tables S16-S17 
@@ -33,11 +34,7 @@ Researchers' own analyses calculated (or derived) based in part on data from Nie
 ## Software
 
 - **Stata** 17 or later
-- **Python 3** with `pandas`, `duckdb`, `rapidfuzz`, `pyreadstat`, and `openpyxl`
-
-```
-pip install pandas duckdb rapidfuzz pyreadstat openpyxl
-```
+- **Python 3** 
 
 ---
 
@@ -48,7 +45,7 @@ Run the scripts in the order below. Each step uses the output of the previous on
 ### Part 1. USDA GBFPD: food categories and additive identification (`main_analysis/`)
 
 | Step | Script | What it does |
-|---|---|---|---|---|
+|---|---|---|
 | 1 | `duplicateremoval_1.do` | Cleans UPCs and removes duplicate records. Among duplicates, keeps records with a food category and an ingredient list, then the most recently modified record. Keeps U.S. products. |
 | 2 | `categorydefinition_2.do` | Groups the GBFPD branded food categories into 34 food categories (SI Appendix, Table S2) and drops products without a usable category. |
 | 3 | `ingredientcount_3.do` | Drops products without ingredient information, corrects ingredient lists with unusual separators, cleans the ingredient text, and counts ingredients. |
@@ -61,7 +58,7 @@ Run the scripts in the order below. Each step uses the output of the previous on
 ### Part 2. Linking to NielsenIQ and main results (`main_analysis/`)
 
 | Step | Script | What it does |
-|---|---|---|---|---|
+|---|---|---|
 | 9 | `match_scanner_usda_9.py` | Matches NielsenIQ food and beverage products to GBFPD products by UPC (exact match, then check-digit match; private-label UPCs through the NielsenIQ crosswalks). Keeps purchases of matched products, adds trip, household, and USDA information, and writes one file per food group (9 groups). |
 | 10 | `import_categories_10.do` |  Imports the 9 food-group files into Stata. |
 | 11 | `build_analysis_data_11.do` |  Builds the regulatory case (most stringent group present), fills missing package sizes, converts package size to ounces, computes price per ounce, and builds household variables, sampling weights, and purchase month. |
@@ -73,7 +70,7 @@ Run the scripts in the order below. Each step uses the output of the previous on
 Run after Part 2. The folders can be run in any order. Within a folder, run the scripts in the order listed.
 
 | Folder | Script(s), in order | What it does |
-|---|---|---|---|
+|---|---|---|
 | `S5-S7/` | `Tables_S5_S6_S7.do` | Number of products containing each additive (S5), distribution of products by number of targeted additives (S6), and mean ingredient count (S7), by food category. Uses `brandedfood_6.dta`. |
 | `S8/` | `match_rate_table_SI8.py` | Match rates between the GBFPD and NielsenIQ by food category (SI Table S8). |
 | `S12-S14/` | 1. `rank_additives.do` 2. `Tables_S12-S14.do` | Finds the position (rank) of each targeted additive in the ingredient list, then repeats the exposure, price, and expenditure analyses counting only additives among the first 3, 5, and 10 ingredients. |
@@ -88,7 +85,7 @@ Run after Part 2. The folders can be run in any order. Within a folder, run the 
 Figures 3 and 4 read the data created in Part 1 (run after step 8). The other figures contain their values in the script and can be run at any time. Each script saves a PNG (300 dpi) and a PDF.
 
 | Script | Figure | What it does |
-|---|---|---|---|
+|---|---|---|
 | `figure_1.py` | Figure 1 | Regulatory status of the 34 targeted additives in the EU, the U.S., and California. | 
 | `figure_2.py` | Figure 2 | Number of products containing each targeted additive, colored by regulatory group. |
 | `figure_3.py` | Figure 3 | (A) Number of ingredients, all products vs. products with targeted additives; (B) share of products by number of targeted additives, by food category. |
